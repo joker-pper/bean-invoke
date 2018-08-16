@@ -167,16 +167,18 @@ public class InvokeUtils {
             }
             Type classType = types[i];
 
-            String errorMsg = method.toGenericString() + " \n\r covert data " + val + " to " + classType.toString() +
+            String errorMsg = method.toGenericString() + " \n covert data " + val + " to " + classType.toString() +
                     " error, caused by : ";
 
             //当前值是否已处理
             boolean flag = false;
+            Class currentValClass = null;
 
             if (!flag) {
                 if (classType instanceof Class) {
+                    currentValClass = (Class) classType;
                     try {
-                        val = TypeUtils.castToJavaBean(val, (Class) classType);
+                        val = TypeUtils.castToJavaBean(val, currentValClass);
                         flag = true;
                     } catch (Exception e) {
                     }
@@ -201,6 +203,10 @@ public class InvokeUtils {
                     e.printStackTrace();
                     Assert.isTrue(false, errorMsg + e.getMessage());
                 }
+            }
+
+            if (currentValClass != null && currentValClass.isPrimitive()) {
+                Assert.notNull(val, errorMsg + "primitive class val not allowed null");
             }
             convertParameterValues.add(val);
         }
