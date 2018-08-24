@@ -229,6 +229,7 @@ public class InvokeUtils {
         InvokeResult result = new InvokeResult();
         result.setMethodEntity(getInvokeMethodEntity(method));
         result.setReturnVal(methodValue);
+        result.setParameters(parameterValuesArray);
         result.setReturnValIsVoid(method.getReturnType().equals(void.class));
         return result;
     }
@@ -564,7 +565,7 @@ public class InvokeUtils {
             try {
                 result = method.invoke(object, args);
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
+                throw new IllegalStateException(e);
             } catch (InvocationTargetException e) {
                 Throwable throwable = e.getTargetException();
                 throw new IllegalStateException(throwable);
